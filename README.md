@@ -1,2 +1,5 @@
 # StanklessTrashcan
-WSU Team Projects 2019. TrashCAN with Stankless technology
+
+Smart trash can with stankless technology.
+
+A senior design project, Wright State University 2019.

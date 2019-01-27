@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements TrashCanView {
 
 
         TextView tempLabel = (TextView) findViewById(R.id.lblTempLabel);
-        tempLabel.setTextSize(32f);
+        tempLabel.setTextSize(18f);
         tempLabel.setTextColor(Color.BLACK);
         tempLabel.setText("TrashCAN with Stankless Technology\n\nBrought to you by the guys who got stuck in a group together but it actually worked out pretty okay.\n\n-Trashbois");
         tempLabel.setGravity(Gravity.CENTER_HORIZONTAL);

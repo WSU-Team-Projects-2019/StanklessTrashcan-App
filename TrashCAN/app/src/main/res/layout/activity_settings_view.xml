@@ -6,4 +6,14 @@
     android:layout_height="match_parent"
     tools:context=".view.SettingsView">
 
+    <TextView
+        android:id="@+id/lblSettingsTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Settings"
+        android:textColor="@android:color/black"
+        android:textSize="36sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="32dp" />
 </android.support.constraint.ConstraintLayout>

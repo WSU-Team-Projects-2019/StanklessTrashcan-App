@@ -1,5 +1,6 @@
 package com.blastbeatsandcode.trashcan.view;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -44,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements TrashCanView {
         tempLabel.setText("TrashCAN with Stankless Technology\n\nBrought to you by the guys who got stuck in a group together but it actually worked out pretty okay.\n\n-Trashbois");
         tempLabel.setGravity(Gravity.CENTER_HORIZONTAL);
 
-        Messages.makeToast(this, "Application loaded! Time to get STANKLESS!");
+        //Messages.makeToast(this, "Application loaded! Time to get STANKLESS!");
     }
 
     // Open the navigation menu when the user taps on the button
@@ -53,6 +54,16 @@ public class MainActivity extends AppCompatActivity implements TrashCanView {
         switch (item.getItemId()) {
             case android.R.id.home:
                 _drawerLayout.openDrawer(GravityCompat.START);
+                return true;
+            case R.id.status_btn:
+                startActivity(new Intent(this, MainActivity.class));
+                Messages.makeToast(this, "TESTSETT");
+                return true;
+            case R.id.grocery_list_btn:
+                startActivity(new Intent(this, GroceryListview.class));
+                return true;
+            case R.id.settings_btn:
+                startActivity(new Intent(this, SettingsView.class));
                 return true;
         }
         return super.onOptionsItemSelected(item);

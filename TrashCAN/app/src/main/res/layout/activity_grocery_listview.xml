@@ -6,4 +6,28 @@
     android:layout_height="match_parent"
     tools:context=".view.GroceryListview">
 
+    <TextView
+        android:id="@+id/lblGroceryListTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="Grocery List"
+        android:textColor="@android:color/black"
+        android:textSize="36sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/grocery_toolbar" />
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/grocery_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:title="@string/shopping_list"
+        app:layout_constraintBottom_toTopOf="@+id/lblGroceryListTitle" />
 </android.support.constraint.ConstraintLayout>

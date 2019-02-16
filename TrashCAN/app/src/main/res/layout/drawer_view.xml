@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/one"
-            android:title="First" />
-        <item
-            android:id="@+id/two"
-            android:title="Second" />
-        <item
-            android:id="@+id/three"
-            android:title="Third" />
-        <item
-            android:id="@+id/four"
-            android:title="Fourth" />
-    </group>
-</menu>
+    <menu xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools">
+        <group android:checkableBehavior="single">
+    
+            <item
+                android:id="@+id/status_btn"
+                android:title="TrashCAN Status"
+                android:icon="@drawable/ic_trashcan_black"/>
+            <item
+                android:id="@+id/grocery_list_btn"
+                android:title="Grocery List"
+                android:icon="@drawable/ic_shopping_basket_black"/>
+            <item
+                android:id="@+id/settings_btn"
+                android:title="Settings"
+                android:icon="@drawable/ic_settings_black"/>
+        </group>
+    </menu>

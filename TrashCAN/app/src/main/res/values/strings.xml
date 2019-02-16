@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">TrashCAN</string>
+    <string name="shopping_list">Shopping List</string>
+    <string name="settings">Settings</string>
 </resources>

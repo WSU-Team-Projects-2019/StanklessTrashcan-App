@@ -63,19 +63,22 @@ public class MainActivity extends AppCompatActivity implements TrashCanView {
                         switch (menuItem.getItemId()) {
                             case R.id.status_btn:
                                 startActivity(homeIntent);
+                                menuItem.setChecked(false);
                                 mDrawerLayout.closeDrawers();
-                                return true;
+                                return false; // Return false to not highlight the selection
                             case R.id.grocery_list_btn:
                                 startActivity(groceryIntent);
+                                menuItem.setChecked(false);
                                 mDrawerLayout.closeDrawers();
-                                return true;
+                                return false;
                             case R.id.settings_btn:
                                 startActivity(settingsIntent);
+                                menuItem.setChecked(false);
                                 mDrawerLayout.closeDrawers();
-                                return true;
+                                return false;
                         }
                         mDrawerLayout.closeDrawers();
-                        return true;
+                        return false;
                     }
                 }
         );

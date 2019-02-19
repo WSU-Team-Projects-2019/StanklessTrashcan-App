@@ -1,6 +1,9 @@
 package com.blastbeatsandcode.trashcan.view;
 
+import android.content.Intent;
 import android.graphics.Color;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -19,14 +22,17 @@ import com.blastbeatsandcode.trashcan.utils.Messages;
 public class MainActivity extends AppCompatActivity implements TrashCanView {
 
     // Reference to the drawer layout
-    private DrawerLayout _drawerLayout;
+    private DrawerLayout mDrawerLayout;
+    private NavigationView mNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        _drawerLayout = findViewById(R.id.drawer_layout);
+        // References to UI elements
+        mDrawerLayout = findViewById(R.id.drawer_layout);
+        mNavigationView = findViewById(R.id.nav_view);
 
 
         // Set up toolbar
@@ -37,14 +43,45 @@ public class MainActivity extends AppCompatActivity implements TrashCanView {
         actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
 
 
-
+        // TODO: Get rid of this and put something intelligible here
         TextView tempLabel = (TextView) findViewById(R.id.lblTempLabel);
         tempLabel.setTextSize(18f);
         tempLabel.setTextColor(Color.BLACK);
         tempLabel.setText("TrashCAN with Stankless Technology\n\nBrought to you by the guys who got stuck in a group together but it actually worked out pretty okay.\n\n-Trashbois");
         tempLabel.setGravity(Gravity.CENTER_HORIZONTAL);
 
-        Messages.makeToast(this, "Application loaded! Time to get STANKLESS!");
+        // Intents that can be used to start other activities
+        final Intent homeIntent = new Intent(this, MainActivity.class);
+        final Intent groceryIntent = new Intent(this, GroceryListview.class);
+        final Intent settingsIntent = new Intent(this, SettingsView.class);
+
+        // Gets if the user has tapped on menu items
+        mNavigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                        switch (menuItem.getItemId()) {
+                            case R.id.status_btn:
+                                startActivity(homeIntent);
+                                menuItem.setChecked(false);
+                                mDrawerLayout.closeDrawers();
+                                return false; // Return false to not highlight the selection
+                            case R.id.grocery_list_btn:
+                                startActivity(groceryIntent);
+                                menuItem.setChecked(false);
+                                mDrawerLayout.closeDrawers();
+                                return false;
+                            case R.id.settings_btn:
+                                startActivity(settingsIntent);
+                                menuItem.setChecked(false);
+                                mDrawerLayout.closeDrawers();
+                                return false;
+                        }
+                        mDrawerLayout.closeDrawers();
+                        return false;
+                    }
+                }
+        );
     }
 
     // Open the navigation menu when the user taps on the button
@@ -52,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements TrashCanView {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                _drawerLayout.openDrawer(GravityCompat.START);
+                mDrawerLayout.openDrawer(GravityCompat.START);
                 return true;
         }
         return super.onOptionsItemSelected(item);

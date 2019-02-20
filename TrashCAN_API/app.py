@@ -36,7 +36,7 @@ led = OutputDevice(LED_PIN, active_high=False, initial_value=False)
 #Setup parser
 
 #Setup database
-DATABASE = '/path/to/database.db'
+DATABASE = '/srv/trashcan/venv/database.db'
 
 def get_db():
     db = getattr(g, '_database', None)
@@ -62,7 +62,7 @@ class Api(Resource):
 
 class Lid(Resource):
     def get(self):
-        if lid_switch.is_pressed:
+        if lid_switch.value:
             status = 'open'
         else:
             status = 'closed'
@@ -146,16 +146,17 @@ class LightED(Resource):
 
 class Scale (Resource):
     def get(self):
-        # TODO: Retrieve tare value from database
-        tare = 0
+        cur = get_db().cursor()
+        tare = cur.execute("SELECT [Value] FROM [System_Options] WHERE [Option_Name] = 'tare'")
         hx711.reset() #Maybe not necessary
         results = hx711.get_raw_data(NUM_MEASUREMENTS)
         return sum(results)/len(results) - tare
 
     def put(self):
         hx711.reset()  # Maybe not necessary
-        #TODO: Store tare value in database
         tare = hx711.get_raw_data(NUM_MEASUREMENTS)
+        cur = get_db().cursor()
+        cur.execute("UPDATE [System_Options] SET [Value] = ? WHERE [Option_Name] = 'tare'", tare)
         return {'hello': 'world'}
 
 class Weight (Resource):

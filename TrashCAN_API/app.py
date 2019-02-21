@@ -1,5 +1,7 @@
 import sqlite3
 import json
+import uuid
+import datetime
 from flask import Flask, request, g
 from flask_restful import Resource, Api, reqparse
 from gpiozero import Button, OutputDevice
@@ -74,11 +76,14 @@ class Lid(Resource):
         action = request.args.get('action')
 
         if action == 'off':
-            lid_button.off()
+            lid_close_button.on()
         elif action == 'on':
-            lid_button.on()
+            lid_open_button.on()
         elif action == 'toggle':
-            lid_button.toggle()
+            if lid_switch.value:
+                lid_close_button.on()
+            else:
+                lid_close_button.on()
         else:
             return 400
         return 'Success'
@@ -149,39 +154,71 @@ class LightED(Resource):
 
 class Scale (Resource):
     def get(self):
-        cur = get_db().cursor()
-        cur.execute("SELECT [Value] FROM [System_Options] WHERE [Option_Name] = 'tare'")
-        tare = cur.fetchone()
+        conn = get_db()
+        conn.cursor().execute("SELECT [Value] FROM [System_Options] WHERE [Option_Name] = 'tare'")
+        tare = conn.cursor().fetchone()
         hx711.reset() #Maybe not necessary
         results = hx711.get_raw_data(NUM_MEASUREMENTS)
         return sum(results)/len(results) - tare
 
     def put(self):
-        cur = get_db().cursor()
+        conn = get_db()
         hx711.reset()  # Maybe not necessary
         tare = hx711.get_raw_data(NUM_MEASUREMENTS)
-        cur.execute("UPDATE [System_Options] SET [Value] = ? WHERE [Option_Name] = 'tare'", tare)
+        conn.cursor().execute("UPDATE [System_Options] SET [Value] = ? WHERE [Option_Name] = 'tare'", (tare,))
+        conn.commit()
         return 'Success'
 
 class WeightList (Resource):
     def get(self):
-        cur = get_db().cursor()
-        cur.execute("SELECT * FROM[Weight]")
-        results = cur.fetchall()
+        conn = get_db()
+        conn.cursor().execute("SELECT * FROM[Weight]")
+        results = conn.cursor().fetchall()
         return json.dumps(results)
 
     def delete(self):
-        return 'Not implemented'
+        return 501
 
 class BarcodeList (Resource):
     def get(self):
-        cur = get_db().cursor()
-        cur.execute("SELECT * FROM[Barcode]")
-        results = cur.fetchall()
+        conn = get_db()
+        conn.cursor().execute("SELECT * FROM[Barcode]")
+        results = conn.cursor().fetchall()
         return json.dumps(results)
 
     def delete(self):
-        return 'Not implemented'
+        return 501
+
+class Barcode (Resource):
+    def post(self,barcode):
+        conn = get_db()
+        barcode_id = uuid.uuid1()
+        time = datetime.datetime.now()
+        conn.cursor().execute("INSERT INTO ([barcode_id],[timestamp],[barcode]) VALUES(?, ?, ?)",(barcode_id,time,barcode,))
+        conn.commit()
+        return barcode_id
+
+    def delete(self, barcode_id):
+        conn = get_db()
+        result = conn.cursor().execute("DELETE FROM[Barcode] WHERE barcode_id = ?",(barcode_id,))
+        conn.commit()
+        return result
+
+
+class Weight (Resource):
+    def post(self):
+        conn = get_db()
+        weight_id = uuid.uuid1()
+        time = datetime.datetime.now()
+        conn.cursor().execute("INSERT INTO ([weight_id],[timestamp],[weight]) VALUES(?, ?, ?)",(weight_id,time,weight,))
+        conn.commit()
+        return weight_id
+
+    def delete(self, weight_id):
+        conn = get_db()
+        result = conn.cursor().execute("DELETE FROM[Weight] WHERE weight_id = ?",(weight_id,))
+        conn.commit()
+        return result
 
 #Map resource
 api.add_resource(Index, '/')
@@ -192,8 +229,8 @@ api.add_resource(Light, '/api/light')
 api.add_resource(Fan, '/api/fan')
 api.add_resource(BarcodeList, '/api/barcode')
 api.add_resource(WeightList, '/api/weight')
-api.add_resource(Barcode, '/api/barcode/<barcodeid>')
-api.add_resource(Weight, '/api/weight/<weightid>')
+api.add_resource(Barcode, '/api/barcode/<barcode_id>')
+api.add_resource(Weight, '/api/weight/<weight_id>')
 
 if __name__ == '__main__':
     app.run()

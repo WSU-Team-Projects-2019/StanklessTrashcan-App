@@ -31,6 +31,12 @@ import com.blastbeatsandcode.trashcan.controller.CanController;
 import com.blastbeatsandcode.trashcan.utils.Constant;
 import com.blastbeatsandcode.trashcan.utils.Messages;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
 // MainActivity is the initial view for the application
 public class MainActivity extends AppCompatActivity implements TrashCanView {
 
@@ -93,7 +99,34 @@ public class MainActivity extends AppCompatActivity implements TrashCanView {
         // Sends JSON formatted request to server
         btnJSONTest.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                // 
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, Constant.SERVER_IP + "json-test",
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                // Display the first 500 characters of the response string.
+                                Messages.makeToast(context, "Response is: " + response);
+                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Messages.makeToast(context, "Request failed, no response received!");
+                    }
+
+                })
+                    {
+                        @Override
+                        protected Map<String, String> getParams()
+                        {
+                            Map<String, String>  params = new HashMap<String, String>();
+                            params.put("name", "John Doe");
+                            params.put("age", "31");
+                            params.put("occupation","Accountant");
+
+                            return params;
+                        }
+                    };
+                // Add the request to the RequestQueue
+                queue.add(stringRequest);
             }
         });
 

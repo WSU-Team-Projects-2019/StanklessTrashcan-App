@@ -57,35 +57,65 @@ public class MainActivity extends AppCompatActivity implements TrashCanView {
 
         Button btnQueryTest = (Button) findViewById(R.id.btnQuery);
         Button btnJSONTest = (Button) findViewById(R.id.btnJSON);
-        EditText txtMessage = (EditText) findViewById(R.id.txtMessage);
+        Button btnServerTest = (Button) findViewById(R.id.btnServerTest);
+
+        final EditText txtMessage = (EditText) findViewById(R.id.txtMessage);
 
         // Set onClick listeners
-        RequestQueue queue = Volley.newRequestQueue(this);
+        final RequestQueue queue = Volley.newRequestQueue(this);
         final Context context = this;
+
+        // Sends text from text field to server
         btnQueryTest.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (txtMessage.getText().toString().trim().length() != 0) { // Check if something has been entered into the field
+                    StringRequest stringRequest = new StringRequest(Request.Method.GET, Constant.SERVER_IP + "query-test?msg=" + txtMessage.getText().toString(),
+                            new Response.Listener<String>() {
+                                @Override
+                                public void onResponse(String response) {
+                                    // Display the first 500 characters of the response string.
+                                    Messages.makeToast(context, "Response is: " + response);
+                                }
+                            }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Messages.makeToast(context, "Request failed, no response received!");
+                        }
+                    });
+                    // Add the request to the RequestQueue
+                    queue.add(stringRequest);
+                } else {
+                    Messages.makeToast(context, "Enter text in the query field first!");
+                }
+            }
+        });
+
+        // Sends JSON formatted request to server
+        btnJSONTest.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // 
+            }
+        });
+
+
+        btnServerTest.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 StringRequest stringRequest = new StringRequest(Request.Method.GET, Constant.SERVER_IP,
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
                                 // Display the first 500 characters of the response string.
-                                Messages.makeToast(context, "Response is: " + response.substring(0, 500));
-                                System.out.println("WORKED");
+                                Messages.makeToast(context, "Response is: " + response);
                             }
                         }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Messages.makeToast(context, "THAT DIDN\'T WORK!");
-                        System.out.println("BROKED");
+                        Messages.makeToast(context, "Request failed, no response received!");
                     }
                 });
+                // Add the request to the RequestQueue
+                queue.add(stringRequest);
             }
-        });
-
-        btnJSONTest.setOnClickListener(new View.OnClickListener() {
-               public void onClick(View v) {
-                   // your handler code here
-               }
         });
 
 

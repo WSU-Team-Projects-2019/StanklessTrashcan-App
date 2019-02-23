@@ -20,10 +20,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.HttpHeaderParser;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.blastbeatsandcode.trashcan.R;
@@ -34,6 +39,7 @@ import com.blastbeatsandcode.trashcan.utils.Messages;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -99,34 +105,94 @@ public class MainActivity extends AppCompatActivity implements TrashCanView {
         // Sends JSON formatted request to server
         btnJSONTest.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                StringRequest stringRequest = new StringRequest(Request.Method.POST, Constant.SERVER_IP + "json-test",
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                // Display the first 500 characters of the response string.
-                                Messages.makeToast(context, "Response is: " + response);
-                            }
-                        }, new Response.ErrorListener() {
+                // Build JSON object
+                JSONObject jsonBody = new JSONObject();
+                try {
+                    jsonBody.put("name", "John Doe");
+                    jsonBody.put("age", "31");
+                    jsonBody.put("occupation","Accountant");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                final String reqBody = jsonBody.toString();
+
+                StringRequest stringRequest = new StringRequest(Request.Method.POST,Constant.SERVER_IP + "json-test", new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Messages.makeToast(context, "Response is: " + response);
+                    }
+                }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Messages.makeToast(context, "Request failed, no response received!");
+                        Messages.makeToast(context, "Request failed, no response received! Error: " + error.getMessage());
+                    }
+                }){
+
+
+                    // Ensures that the body is of the correct type
+                    @Override
+                    public byte[] getBody() {
+                        try {
+                            return reqBody == null ? null : reqBody.getBytes("utf-8");
+                        } catch (UnsupportedEncodingException uee) {
+                            VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", reqBody, "utf-8");
+                            return null;
+                        }
                     }
 
-                })
-                    {
-                        @Override
-                        protected Map<String, String> getParams()
-                        {
-                            Map<String, String>  params = new HashMap<String, String>();
-                            params.put("name", "John Doe");
-                            params.put("age", "31");
-                            params.put("occupation","Accountant");
+                    @Override
+                    public Map<String, String> getHeaders(){
+                        Map<String,String> params = new HashMap<>();
+                        params.put("Content-Type","application/json; charset=utf-8");
+                        return params;
+                    }
 
-                            return params;
-                        }
-                    };
-                // Add the request to the RequestQueue
+                    @Override
+                    public String getBodyContentType() {
+                        return "application/json; charset=utf-8";
+                    }
+                };
                 queue.add(stringRequest);
+//                JSONObject params = new JSONObject();
+//                try {
+//                    params.put("name", "John Doe");
+//                    params.put("age", "31");
+//                    params.put("occupation","Accountant");
+//                } catch (JSONException e) {
+//                    Messages.makeToast(context, "JSON message could not be created...");
+//                }
+//                final String requestBody = params.toString();
+//
+//                JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, Constant.SERVER_IP + "json-test", params,
+//                        new Response.Listener<JSONObject>() {
+//                            @Override
+//                            public void onResponse(JSONObject response) {
+//                                Messages.makeToast(context, "Response is: " + response.toString());
+//                            }
+//                        },
+//                        new Response.ErrorListener() {
+//                            @Override
+//                            public void onErrorResponse(VolleyError error) {
+//                                Messages.makeToast(context, "Request failed, no response received!");
+//                            }
+//                        }
+//                ) {
+//                    @Override
+//                    public String getBodyContentType() {
+//                        return "application/json; charset=utf-8";
+//                    }
+//
+//                    @Override
+//                    public byte[] getBody() {
+//                        try {
+//                            return requestBody == null ? null : requestBody.getBytes("utf-8");
+//                        } catch (UnsupportedEncodingException e) {
+//                            e.printStackTrace();
+//                        }
+//                        return null;
+//                    }
+//                };
+//                queue.add(jsonRequest);
             }
         });
 

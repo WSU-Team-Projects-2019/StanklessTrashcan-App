@@ -217,14 +217,6 @@ public class MainActivity extends AppCompatActivity implements TrashCanView {
             }
         });
 
-
-//        // TODO: Get rid of this and put something intelligible here
-//        TextView tempLabel = (TextView) findViewById(R.id.lblTempLabel);
-//        tempLabel.setTextSize(18f);
-//        tempLabel.setTextColor(Color.BLACK);
-//        tempLabel.setText("TrashCAN with Stankless Technology\n\nBrought to you by the guys who got stuck in a group together but it actually worked out pretty okay.\n\n-Trashbois");
-//        tempLabel.setGravity(Gravity.CENTER_HORIZONTAL);
-
         // Intents that can be used to start other activities
         final Intent homeIntent = new Intent(this, MainActivity.class);
         final Intent groceryIntent = new Intent(this, GroceryListview.class);

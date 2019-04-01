@@ -12,6 +12,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.JsonReader;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -76,6 +77,33 @@ public class MainActivity extends AppCompatActivity implements TrashCanView {
         // Set onClick listeners
         final RequestQueue queue = Volley.newRequestQueue(this);
         final Context context = this;
+
+
+        // TODO: Clean this up, and make it nicer
+        final TextView lblStatus = (TextView) findViewById(R.id.lblStatus);
+        lblStatus.setTextSize(18);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, Constant.SERVER_IP + "get-can-status",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Display the first 500 characters of the response string.
+                        try {
+                            JSONObject json = new JSONObject(response);
+                            lblStatus.setText("Lid Status:\t\t" + json.get("lid_status") + "\t\tFan Status:\t\t" + json.get("fan_status") +
+                                    "\nLED Status:\t" + json.get("led_status") + "\t\tBulb Status:\t" + json.get("bulb_status"));
+                        } catch (JSONException e) {
+                            lblStatus.setText("Could not get can status! :(");
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                lblStatus.setText("Could not retrieve status from server. :(");
+            }
+        });
+        // Add the request to the RequestQueue
+        queue.add(stringRequest);
 
         // Sends text from text field to server
         btnQueryTest.setOnClickListener(new View.OnClickListener() {

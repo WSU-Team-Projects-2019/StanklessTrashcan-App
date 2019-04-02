@@ -7,7 +7,11 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -24,14 +28,23 @@ import com.blastbeatsandcode.trashcan.utils.Messages;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.Iterator;
+import java.util.concurrent.TimeUnit;
 
 public class GroceryListview extends AppCompatActivity implements TrashCanView {
 
     JSONArray items;
     LinearLayout layout;
     ScrollView scrollView;
+    ListView listView;
+
+    // Arrays to hold item values
+    ImageView[] images;
+    String[] itemNames;
+    String[] barcodes;
+    String[] counts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,9 +55,11 @@ public class GroceryListview extends AppCompatActivity implements TrashCanView {
         setSupportActionBar((Toolbar) findViewById(R.id.grocery_toolbar));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        /*
         // Get reference to linear layout
         layout = (LinearLayout) findViewById(R.id.grocerylist_linearlayout);
         scrollView = (ScrollView) findViewById(R.id.grocerylist_scrollview);
+        */
 
         final RequestQueue queue = Volley.newRequestQueue(this);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, Constant.SERVER_IP + "grocerylist",
@@ -53,15 +68,26 @@ public class GroceryListview extends AppCompatActivity implements TrashCanView {
                     public void onResponse(String response) {
                         try {
                             items = new JSONArray(response);
+                            int len = items.length();
+                            images = new ImageView[len];
+                            itemNames = new String[len];
+                            barcodes = new String[len];
+                            counts = new String[len];
+
                             for (int i = 0; i < items.length(); i++)
                             {
-                                TextView view = new TextView(getApplicationContext());
                                 JSONObject obj = (JSONObject) items.get(i);
-                                view.setText("Name: " + obj.getString("title") + "\nBarcode: " + obj.getString("barcode") + "\nCount: " + obj.getString("count") + "\n");
-                                view.setTextSize(22);
-                                view.setTextColor(Color.BLACK);
-                                layout.addView(view);
+                                // TODO: Change this to some unique image...maybe
+                                //images[i] = something;
+                                itemNames[i] = obj.getString("title");
+                                barcodes[i] = obj.getString("barcode");
+                                counts[i] = obj.getString("count");
                             }
+
+                            // Create the custom adapter to fill in the food items based on our JSON array
+                            listView = (ListView)findViewById(R.id.grocerylist_listview);
+                            CustomAdapter customAdapter = new CustomAdapter();
+                            listView.setAdapter(customAdapter);
                         } catch (JSONException e) {
                             Messages.makeToast(getApplicationContext(), "Could not properly parse data from server.");
                         }
@@ -80,4 +106,40 @@ public class GroceryListview extends AppCompatActivity implements TrashCanView {
     public void update() {
         // TODO: Implement this
     }
+
+    class CustomAdapter extends BaseAdapter {
+
+        @Override
+        public int getCount() {
+            return items.length();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            convertView = getLayoutInflater().inflate(R.layout.grocerylist_item, null);
+
+            ImageView itemImage = (ImageView)convertView.findViewById(R.id.item_image);
+            TextView itemName = (TextView)convertView.findViewById(R.id.item_name);
+            TextView barcode = (TextView)convertView.findViewById(R.id.barcode);
+            TextView count = (TextView)convertView.findViewById(R.id.count);
+
+            itemImage.setImageResource(R.drawable.vaporwave);
+            itemName.setText(itemNames[position]);
+            barcode.setText(barcodes[position]);
+            count.setText("Count: " + counts[position]);
+
+            return convertView;
+        }
+    }
+
 }

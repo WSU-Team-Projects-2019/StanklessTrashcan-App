@@ -15,7 +15,15 @@
         android:theme="?attr/actionBarTheme"
         app:title="@string/shopping_list" />
 
-    <ScrollView
+    <ListView
+        android:id="@+id/grocerylist_listview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
+        app:layout_constraintTop_toBottomOf="@+id/grocery_toolbar"
+        tools:layout_editor_absoluteX="0dp"></ListView>
+
+    <!--<ScrollView
         android:id="@+id/grocerylist_scrollview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -29,5 +37,5 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" />
-    </ScrollView>
+    </ScrollView>-->
 </android.support.constraint.ConstraintLayout>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/item_image"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
+        android:scaleType="centerCrop"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/item_name"
+        android:layout_width="241dp"
+        android:layout_height="72dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginStart="19dp"
+        android:layout_marginLeft="19dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="23dp"
+        android:layout_marginRight="23dp"
+        android:layout_toEndOf="@id/item_image"
+        android:layout_toRightOf="@id/item_image"
+        android:text="Food Item"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/barcode"
+        android:layout_width="130dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/item_name"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="18dp"
+        android:layout_marginEnd="132dp"
+        android:layout_marginRight="132dp"
+        android:layout_toEndOf="@id/item_image"
+        android:layout_toRightOf="@id/item_image"
+        android:text="9781236987426" />
+
+    <TextView
+        android:id="@+id/count"
+        android:layout_width="74dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/item_name"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginStart="189dp"
+        android:layout_marginLeft="189dp"
+        android:layout_marginTop="18dp"
+        android:layout_marginEnd="21dp"
+        android:layout_marginRight="21dp"
+        android:layout_toEndOf="@id/item_image"
+        android:layout_toRightOf="@id/item_image"
+        android:text="Count: 1" />
+</RelativeLayout>

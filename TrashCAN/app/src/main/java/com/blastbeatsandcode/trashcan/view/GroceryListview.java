@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -45,6 +46,9 @@ public class GroceryListview extends AppCompatActivity implements TrashCanView {
     String[] itemNames;
     String[] barcodes;
     String[] counts;
+
+    float historicX = Float.NaN, historicY = Float.NaN;
+    static final int DELTA = 50;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +92,36 @@ public class GroceryListview extends AppCompatActivity implements TrashCanView {
                             listView = (ListView)findViewById(R.id.grocerylist_listview);
                             CustomAdapter customAdapter = new CustomAdapter();
                             listView.setAdapter(customAdapter);
+
+                            listView.setOnTouchListener(new View.OnTouchListener() {
+                                @Override
+                                public boolean onTouch(View v, MotionEvent event) {
+
+                                    switch (event.getAction()) {
+                                        case MotionEvent.ACTION_DOWN:
+                                            historicX = event.getX();
+                                            historicY = event.getY();
+                                            break;
+
+                                        case MotionEvent.ACTION_UP:
+                                            if (event.getX() - historicX < -DELTA) {
+                                                //FunctionDeleteRowWhenSlidingLeft();
+                                                Messages.makeToast(getApplicationContext(), "LEFT");
+                                                return true;
+                                            }
+                                            else if (event.getX() - historicX > DELTA) {
+                                                Messages.makeToast(getApplicationContext(), "RIGHT");
+                                                return true;
+                                            }
+                                            break;
+                                            case MotionEvent.
+
+                                        default:
+                                            return false;
+                                    }
+                                    return false;
+                                }
+                            });
                         } catch (JSONException e) {
                             Messages.makeToast(getApplicationContext(), "Could not properly parse data from server.");
                         }

@@ -113,6 +113,7 @@ public class GroceryListview extends AppCompatActivity implements TrashCanView {
                                                 @Override
                                                 public void onClick(DialogInterface arg0, int arg1) {
                                                     Messages.makeToast(getApplicationContext(), "Item Removed");
+                                                    recreate();
                                                 }
                                             });
 

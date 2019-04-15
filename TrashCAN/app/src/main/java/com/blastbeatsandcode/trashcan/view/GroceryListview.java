@@ -112,7 +112,23 @@ public class GroceryListview extends AppCompatActivity implements TrashCanView {
                                             new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface arg0, int arg1) {
-                                                    Messages.makeToast(getApplicationContext(), "Item Removed");
+                                                    StringRequest stringRequest = new StringRequest(Request.Method.GET, Constant.SERVER_IP + "delete-item?code=" + barcodes[pos],
+                                                            new Response.Listener<String>() {
+                                                                @Override
+                                                                public void onResponse(String response) {
+                                                                    // Display the first 500 characters of the response string.
+                                                                    Messages.makeToast(getApplicationContext(), response + "\n(" + itemNames[pos] + ")");
+                                                                }
+                                                            }, new Response.ErrorListener() {
+                                                        @Override
+                                                        public void onErrorResponse(VolleyError error) {
+                                                            Messages.makeToast(getApplicationContext(), "Request failed, no response received!");
+                                                        }
+                                                    });
+                                                    // Add the request to the RequestQueue
+                                                    queue.add(stringRequest);
+
+                                                    // Reload the view
                                                     recreate();
                                                 }
                                             });

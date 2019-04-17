@@ -1,19 +1,25 @@
 package com.blastbeatsandcode.trashcan.view;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -45,6 +51,11 @@ public class GroceryListview extends AppCompatActivity implements TrashCanView {
     String[] itemNames;
     String[] barcodes;
     String[] counts;
+
+    float historicX = Float.NaN, historicY = Float.NaN;
+    static final int DELTA = 50;
+
+    Context con = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +99,86 @@ public class GroceryListview extends AppCompatActivity implements TrashCanView {
                             listView = (ListView)findViewById(R.id.grocerylist_listview);
                             CustomAdapter customAdapter = new CustomAdapter();
                             listView.setAdapter(customAdapter);
+
+                            listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() { //list is my listView
+                                @Override
+                                public boolean onItemLongClick(AdapterView<?> arg0, View arg1, final int pos, long id) {
+
+                                    AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(con);
+                                    builder.setMessage("Remove item from shopping list?").setTitle("Remove from shopping list");
+
+                                    // Yes Button
+                                    builder.setPositiveButton("Yes",
+                                            new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface arg0, int arg1) {
+                                                    StringRequest stringRequest = new StringRequest(Request.Method.GET, Constant.SERVER_IP + "delete-item?code=" + barcodes[pos],
+                                                            new Response.Listener<String>() {
+                                                                @Override
+                                                                public void onResponse(String response) {
+                                                                    // Display the first 500 characters of the response string.
+                                                                    Messages.makeToast(getApplicationContext(), response + "\n(" + itemNames[pos] + ")");
+                                                                }
+                                                            }, new Response.ErrorListener() {
+                                                        @Override
+                                                        public void onErrorResponse(VolleyError error) {
+                                                            Messages.makeToast(getApplicationContext(), "Request failed, no response received!");
+                                                        }
+                                                    });
+                                                    // Add the request to the RequestQueue
+                                                    queue.add(stringRequest);
+
+                                                    // Reload the view
+                                                    recreate();
+                                                }
+                                            });
+
+                                    // No button
+                                    builder.setNegativeButton("No",new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            // Do nothing
+                                        }
+                                    });
+
+                                    AlertDialog dialog = builder.create();
+                                    dialog.show();
+
+                                    return true;
+                                }
+                            });
+
+                            /* // HANDLES SWIPING LEFT AND RIGHT -- DOES NOT WORK AS INTENDED
+                            listView.setOnTouchListener(new View.OnTouchListener() {
+                                @Override
+                                public boolean onTouch(View v, MotionEvent event) {
+
+                                    switch (event.getAction()) {
+                                        case MotionEvent.ACTION_DOWN:
+                                            historicX = event.getX();
+                                            historicY = event.getY();
+                                            break;
+
+                                        case MotionEvent.ACTION_UP:
+                                            if (event.getX() - historicX < -DELTA) {
+                                                //FunctionDeleteRowWhenSlidingLeft();
+                                                Messages.makeToast(getApplicationContext(), "LEFT");
+                                                return true;
+                                            }
+                                            else if (event.getX() - historicX > DELTA) {
+                                                Messages.makeToast(getApplicationContext(), "RIGHT");
+                                                return true;
+                                            }
+                                            break;
+                                            case MotionEvent.
+
+                                        default:
+                                            return false;
+                                    }
+                                    return false;
+                                }
+                            });
+                            */
                         } catch (JSONException e) {
                             Messages.makeToast(getApplicationContext(), "Could not properly parse data from server.");
                         }

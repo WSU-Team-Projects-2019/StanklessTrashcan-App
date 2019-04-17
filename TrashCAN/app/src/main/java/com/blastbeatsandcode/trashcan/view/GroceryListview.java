@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -42,9 +43,9 @@ import java.util.concurrent.TimeUnit;
 public class GroceryListview extends AppCompatActivity implements TrashCanView {
 
     JSONArray items;
-    LinearLayout layout;
-    ScrollView scrollView;
     ListView listView;
+    SwipeRefreshLayout refreshLayout;
+    CustomAdapter customAdapter;
 
     // Arrays to hold item values
     ImageView[] images;
@@ -62,16 +63,31 @@ public class GroceryListview extends AppCompatActivity implements TrashCanView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_grocery_listview);
 
+        // Get swipe refresh layout
+        refreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_list);
+
+        // Get custom adapter
+        customAdapter = new CustomAdapter();
+
         //Enable back button
         setSupportActionBar((Toolbar) findViewById(R.id.grocery_toolbar));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        /*
-        // Get reference to linear layout
-        layout = (LinearLayout) findViewById(R.id.grocerylist_linearlayout);
-        scrollView = (ScrollView) findViewById(R.id.grocerylist_scrollview);
-        */
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                recreate();
+                refreshLayout.setRefreshing(false);
+            }
+        });
 
+        loadItemsToShoppingList();
+    }
+
+    // Pulls down items to load to shopping list
+    private void loadItemsToShoppingList()
+    {
+        // Populate the list of items from the shopping list on the server
         final RequestQueue queue = Volley.newRequestQueue(this);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, Constant.SERVER_IP + "grocerylist",
                 new Response.Listener<String>() {
@@ -97,7 +113,6 @@ public class GroceryListview extends AppCompatActivity implements TrashCanView {
 
                             // Create the custom adapter to fill in the food items based on our JSON array
                             listView = (ListView)findViewById(R.id.grocerylist_listview);
-                            CustomAdapter customAdapter = new CustomAdapter();
                             listView.setAdapter(customAdapter);
 
                             listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() { //list is my listView

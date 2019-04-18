@@ -68,12 +68,6 @@ public class MainActivity extends AppCompatActivity implements TrashCanView {
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
 
-        Button btnQueryTest = (Button) findViewById(R.id.btnQuery);
-        Button btnJSONTest = (Button) findViewById(R.id.btnJSON);
-        Button btnServerTest = (Button) findViewById(R.id.btnServerTest);
-
-        final EditText txtMessage = (EditText) findViewById(R.id.txtMessage);
-
         // Set onClick listeners
         final RequestQueue queue = Volley.newRequestQueue(this);
         final Context context = this;
@@ -104,106 +98,6 @@ public class MainActivity extends AppCompatActivity implements TrashCanView {
         });
         // Add the request to the RequestQueue
         queue.add(stringRequest);
-
-        // Sends text from text field to server
-        btnQueryTest.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                if (txtMessage.getText().toString().trim().length() != 0) { // Check if something has been entered into the field
-                    StringRequest stringRequest = new StringRequest(Request.Method.GET, Constant.SERVER_IP + "query-test?msg=" + txtMessage.getText().toString(),
-                            new Response.Listener<String>() {
-                                @Override
-                                public void onResponse(String response) {
-                                    // Display the first 500 characters of the response string.
-                                    Messages.makeToast(context, "Response is: " + response);
-                                }
-                            }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Messages.makeToast(context, "Request failed, no response received!");
-                        }
-                    });
-                    // Add the request to the RequestQueue
-                    queue.add(stringRequest);
-                } else {
-                    Messages.makeToast(context, "Enter text in the query field first!");
-                }
-            }
-        });
-
-        // Sends JSON formatted request to server
-        btnJSONTest.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                // Build JSON object
-                JSONObject jsonBody = new JSONObject();
-                try {
-                    jsonBody.put("name", "John Doe");
-                    jsonBody.put("age", "31");
-                    jsonBody.put("occupation","Accountant");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                final String reqBody = jsonBody.toString();
-
-                StringRequest stringRequest = new StringRequest(Request.Method.POST,Constant.SERVER_IP + "json-test", new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Messages.makeToast(context, "Response is: " + response);
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Messages.makeToast(context, "Request failed, no response received! Error: " + error.getMessage());
-                    }
-                }){
-
-
-                    // Ensures that the body is of the correct type
-                    @Override
-                    public byte[] getBody() {
-                        try {
-                            return reqBody == null ? null : reqBody.getBytes("utf-8");
-                        } catch (UnsupportedEncodingException uee) {
-                            VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", reqBody, "utf-8");
-                            return null;
-                        }
-                    }
-
-                    @Override
-                    public Map<String, String> getHeaders(){
-                        Map<String,String> params = new HashMap<>();
-                        params.put("Content-Type","application/json; charset=utf-8");
-                        return params;
-                    }
-
-                    @Override
-                    public String getBodyContentType() {
-                        return "application/json; charset=utf-8";
-                    }
-                };
-                queue.add(stringRequest);
-            }
-        });
-
-
-        btnServerTest.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                StringRequest stringRequest = new StringRequest(Request.Method.GET, Constant.SERVER_IP,
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                // Display the first 500 characters of the response string.
-                                Messages.makeToast(context, "Response is: " + response);
-                            }
-                        }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Messages.makeToast(context, "Request failed, no response received!");
-                    }
-                });
-                // Add the request to the RequestQueue
-                queue.add(stringRequest);
-            }
-        });
 
         // Intents that can be used to start other activities
         final Intent homeIntent = new Intent(this, MainActivity.class);

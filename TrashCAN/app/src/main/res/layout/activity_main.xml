@@ -10,6 +10,13 @@
     tools:context=".view.MainActivity"
     android:fitsSystemWindows="true">
 
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/refresh_list_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
     <!-- Constraint layout contain contents of view -->
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -57,6 +64,8 @@
             app:layout_constraintStart_toStartOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 
     <!-- NavigationView contains contents of sidebar -->

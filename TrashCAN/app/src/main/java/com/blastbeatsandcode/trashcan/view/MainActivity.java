@@ -3,11 +3,13 @@ package com.blastbeatsandcode.trashcan.view;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -68,6 +70,18 @@ public class MainActivity extends AppCompatActivity implements TrashCanView {
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
 
+        // Get swipe refresh layout
+        final SwipeRefreshLayout refreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_list_main);
+
+        // Refresh the layout when the user drags down
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                recreate();
+                refreshLayout.setRefreshing(false);
+            }
+        });
+
         // Set onClick listeners
         final RequestQueue queue = Volley.newRequestQueue(this);
 
@@ -90,6 +104,7 @@ public class MainActivity extends AppCompatActivity implements TrashCanView {
                                     "\nLED Status:\t\t\t\t" + led + "\nBulb Status:\t" + bulb);
                             lblStatus.setTextSize(24);
                             lblStatus.setAllCaps(true);
+                            lblStatus.setTextColor(Color.rgb(0,0,0));
                         } catch (JSONException e) {
                             lblStatus.setText("Could not get can status! :(");
                         }

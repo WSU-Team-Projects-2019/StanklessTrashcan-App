@@ -4,7 +4,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -18,11 +21,16 @@ import com.blastbeatsandcode.trashcan.R;
 import com.blastbeatsandcode.trashcan.utils.Constant;
 import com.blastbeatsandcode.trashcan.utils.Messages;
 
+import java.util.ArrayList;
+
 public class SettingsView extends AppCompatActivity implements TrashCanView {
     Button btnTest;
     Button btnAddJob;
     Button btnSaveSchedule;
     ListView jobList;
+    CustomAdapter customAdapter;
+
+    ArrayList<String> jobs = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +42,10 @@ public class SettingsView extends AppCompatActivity implements TrashCanView {
         btnAddJob = (Button) findViewById(R.id.btnAddJob);
         btnSaveSchedule = (Button) findViewById(R.id.btnSaveSchedule);
         jobList = (ListView) findViewById(R.id.jobList);
+
+        // Create custom adapter
+        customAdapter = new CustomAdapter();
+        jobList.setAdapter(customAdapter);
 
         //Enable back button
         setSupportActionBar((Toolbar) findViewById(R.id.settings_toolbar));
@@ -50,7 +62,7 @@ public class SettingsView extends AppCompatActivity implements TrashCanView {
                             @Override
                             public void onResponse(String response) {
                                 // Display the first 500 characters of the response string.
-                                Messages.makeToast(getApplicationContext(), "Response from the server:\n" + response);
+                                Messages.makeToast(getApplicationContext(), "Connected to server successfully.");
                             }
                         }, new Response.ErrorListener() {
                     @Override
@@ -66,7 +78,12 @@ public class SettingsView extends AppCompatActivity implements TrashCanView {
         // Add a job to the schedule
         btnAddJob.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Messages.makeToast(getApplicationContext(), "TODO: Add a job");
+                if (!(jobs.size() >= 5)) {
+                    jobs.add("");
+                    jobList.setAdapter(customAdapter);
+                } else {
+                    Messages.makeToast(getApplicationContext(), "Maximum of 5 cleaning cycles allowed. Please remove one to insert a different time.");
+                }
             }
         });
 
@@ -81,5 +98,42 @@ public class SettingsView extends AppCompatActivity implements TrashCanView {
     @Override
     public void update() {
         // TODO: Implement this
+    }
+
+    class CustomAdapter extends BaseAdapter {
+
+        @Override
+        public int getCount() {
+            return jobs.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            convertView = getLayoutInflater().inflate(R.layout.joblist_item, null);
+
+            /*
+            ImageView itemImage = (ImageView)convertView.findViewById(R.id.item_image);
+            TextView itemName = (TextView)convertView.findViewById(R.id.item_name);
+            TextView barcode = (TextView)convertView.findViewById(R.id.barcode);
+            TextView count = (TextView)convertView.findViewById(R.id.count);
+
+            itemImage.setImageResource(R.drawable.vaporwave);
+            itemName.setText(itemNames[position]);
+            barcode.setText(barcodes[position]);
+            count.setText("Count: " + counts[position]);
+            */
+
+            return convertView;
+        }
     }
 }

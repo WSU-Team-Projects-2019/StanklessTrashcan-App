@@ -13,6 +13,7 @@
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
+        android:elevation="10dp"
         app:title="@string/settings" />
 
     <TextView
@@ -50,8 +51,13 @@
         android:id="@+id/jobList"
         android:layout_width="0dp"
         android:layout_height="394dp"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="237dp" />
+        android:layout_marginStart="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/btnSaveSchedule"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnAddJob" />
 
     <Button
         android:id="@+id/btnSaveSchedule"

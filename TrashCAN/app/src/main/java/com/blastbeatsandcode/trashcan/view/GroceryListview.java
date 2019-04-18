@@ -53,9 +53,6 @@ public class GroceryListview extends AppCompatActivity implements TrashCanView {
     String[] barcodes;
     String[] counts;
 
-    float historicX = Float.NaN, historicY = Float.NaN;
-    static final int DELTA = 50;
-
     Context con = this;
 
     @Override
@@ -162,38 +159,6 @@ public class GroceryListview extends AppCompatActivity implements TrashCanView {
                                     return true;
                                 }
                             });
-
-                            /* // HANDLES SWIPING LEFT AND RIGHT -- DOES NOT WORK AS INTENDED
-                            listView.setOnTouchListener(new View.OnTouchListener() {
-                                @Override
-                                public boolean onTouch(View v, MotionEvent event) {
-
-                                    switch (event.getAction()) {
-                                        case MotionEvent.ACTION_DOWN:
-                                            historicX = event.getX();
-                                            historicY = event.getY();
-                                            break;
-
-                                        case MotionEvent.ACTION_UP:
-                                            if (event.getX() - historicX < -DELTA) {
-                                                //FunctionDeleteRowWhenSlidingLeft();
-                                                Messages.makeToast(getApplicationContext(), "LEFT");
-                                                return true;
-                                            }
-                                            else if (event.getX() - historicX > DELTA) {
-                                                Messages.makeToast(getApplicationContext(), "RIGHT");
-                                                return true;
-                                            }
-                                            break;
-                                            case MotionEvent.
-
-                                        default:
-                                            return false;
-                                    }
-                                    return false;
-                                }
-                            });
-                            */
                         } catch (JSONException e) {
                             Messages.makeToast(getApplicationContext(), "Could not properly parse data from server.");
                         }

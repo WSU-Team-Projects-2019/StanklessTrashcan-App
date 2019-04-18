@@ -70,10 +70,7 @@ public class MainActivity extends AppCompatActivity implements TrashCanView {
 
         // Set onClick listeners
         final RequestQueue queue = Volley.newRequestQueue(this);
-        final Context context = this;
 
-
-        // TODO: Clean this up, and make it nicer
         final TextView lblStatus = (TextView) findViewById(R.id.lblStatus);
         lblStatus.setTextSize(18);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, Constant.SERVER_IP + "get-can-status",
@@ -83,8 +80,16 @@ public class MainActivity extends AppCompatActivity implements TrashCanView {
                         // Display the first 500 characters of the response string.
                         try {
                             JSONObject json = new JSONObject(response);
-                            lblStatus.setText("Lid Status:\t\t" + json.get("lid_status") + "\t\tFan Status:\t\t" + json.get("fan_status") +
-                                    "\nLED Status:\t" + json.get("led_status") + "\t\tBulb Status:\t" + json.get("bulb_status"));
+
+                            final String lid = (json.getInt("lid_status") == 1) ? "Open" : "Closed";
+                            final String fan = (json.getInt("fan_status") == 1) ? "On" : "Off";
+                            final String led = (json.getInt("led_status") == 1) ? "On" : "Off";
+                            final String bulb = (json.getInt("bulb_status") == 1) ? "On" : "Off";
+
+                            lblStatus.setText("Lid:\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t" + lid + "\nFan Status:\t\t\t" + fan +
+                                    "\nLED Status:\t\t\t\t" + led + "\nBulb Status:\t" + bulb);
+                            lblStatus.setTextSize(24);
+                            lblStatus.setAllCaps(true);
                         } catch (JSONException e) {
                             lblStatus.setText("Could not get can status! :(");
                         }

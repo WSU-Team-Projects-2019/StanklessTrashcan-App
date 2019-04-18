@@ -38,6 +38,7 @@ import com.blastbeatsandcode.trashcan.R;
 import com.blastbeatsandcode.trashcan.controller.CanController;
 import com.blastbeatsandcode.trashcan.utils.Constant;
 import com.blastbeatsandcode.trashcan.utils.Messages;
+import com.gigamole.library.PulseView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -53,6 +54,9 @@ public class MainActivity extends AppCompatActivity implements TrashCanView {
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
 
+    // Pulseview animation
+    PulseView pulseView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +65,9 @@ public class MainActivity extends AppCompatActivity implements TrashCanView {
         // References to UI elements
         mDrawerLayout = findViewById(R.id.drawer_layout);
         mNavigationView = findViewById(R.id.nav_view);
+
+        // Get pulseview
+        pulseView = (PulseView) findViewById(R.id.pv);
 
 
         // Set up toolbar
@@ -105,6 +112,7 @@ public class MainActivity extends AppCompatActivity implements TrashCanView {
                             lblStatus.setTextSize(24);
                             lblStatus.setAllCaps(true);
                             lblStatus.setTextColor(Color.rgb(0,0,0));
+                            pulseView.startPulse();
                         } catch (JSONException e) {
                             lblStatus.setText("Could not get can status! :(");
                         }

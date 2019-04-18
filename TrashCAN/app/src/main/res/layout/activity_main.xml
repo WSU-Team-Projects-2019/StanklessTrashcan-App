@@ -31,7 +31,20 @@
             tools:ignore="MissingConstraints" />
 
 
-        <ImageView
+        <com.gigamole.library.PulseView
+            android:id="@+id/pv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:pv_alpha="70"
+            app:pv_color="#32849E"
+            app:pv_icon="@drawable/can_img_2"
+            app:pv_icon_height="200dp"
+            app:pv_icon_width="200dp"
+            app:pv_measure="height"
+            app:pv_spawn_period="2000"
+            app:pv_interpolator="@android:anim/linear_interpolator"/>
+
+        <!--<ImageView
             android:id="@+id/imageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -45,7 +58,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar"
-            app:srcCompat="@drawable/can_img" />
+            app:srcCompat="@drawable/can_img" /> -->
 
         <TextView
             android:id="@+id/lblStatus"

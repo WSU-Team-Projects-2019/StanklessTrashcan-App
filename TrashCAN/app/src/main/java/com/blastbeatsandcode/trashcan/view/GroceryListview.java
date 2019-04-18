@@ -204,8 +204,9 @@ public class GroceryListview extends AppCompatActivity implements TrashCanView {
             TextView barcode = (TextView)convertView.findViewById(R.id.barcode);
             TextView count = (TextView)convertView.findViewById(R.id.count);
 
-            itemImage.setImageResource(R.drawable.vaporwave);
+            itemImage.setImageResource(R.drawable.vaporwave_2);
             itemName.setText(itemNames[position]);
+            itemName.setTextColor(Color.rgb(204, 63, 104));
             barcode.setText(barcodes[position]);
             count.setText("Count: " + counts[position]);
 

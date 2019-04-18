@@ -3,6 +3,7 @@ package com.blastbeatsandcode.trashcan.view;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -300,11 +301,30 @@ public class SettingsView extends AppCompatActivity implements TrashCanView {
                 Date givenDate = dateFormatUTC.parse(hours[position] + ":" + mins[position]);
                 String localTime = dateFormatLocal.format(givenDate);
 
+                String[] splitTime = localTime.split(":");
+
+                String amOrPM = "AM";
+
+                // Convert the hour to be standard time and not 24 hour time
+                int convHour = Integer.parseInt(splitTime[0]);
+                if (convHour > 12 && convHour < 24)
+                {
+                    convHour = convHour - 12;
+
+                    splitTime[0] = String.valueOf(convHour);
+                    amOrPM = "PM";
+                }
+                else
+                {
+                    splitTime[0] = String.valueOf(convHour);
+                }
+
                 convertView = getLayoutInflater().inflate(R.layout.joblist_item, null);
 
 
                 TextView time = (TextView)convertView.findViewById(R.id.txtTime);
-                time.setText(localTime);
+                time.setText(splitTime[0] + ":" + splitTime[1] + "\t" + amOrPM);
+                time.setTextColor(Color.rgb(204, 63, 104));
             } catch (ParseException e) {
                 Messages.makeToast(getApplicationContext(), "Invalid time");
             }

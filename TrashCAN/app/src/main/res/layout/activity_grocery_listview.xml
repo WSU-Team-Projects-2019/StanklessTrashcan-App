@@ -13,6 +13,7 @@
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
+        android:elevation="10dp"
         app:title="@string/shopping_list" />
 
     <android.support.v4.widget.SwipeRefreshLayout

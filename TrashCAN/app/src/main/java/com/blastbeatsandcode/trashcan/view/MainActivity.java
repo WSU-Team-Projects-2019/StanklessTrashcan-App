@@ -181,46 +181,6 @@ public class MainActivity extends AppCompatActivity implements TrashCanView {
                     }
                 };
                 queue.add(stringRequest);
-//                JSONObject params = new JSONObject();
-//                try {
-//                    params.put("name", "John Doe");
-//                    params.put("age", "31");
-//                    params.put("occupation","Accountant");
-//                } catch (JSONException e) {
-//                    Messages.makeToast(context, "JSON message could not be created...");
-//                }
-//                final String requestBody = params.toString();
-//
-//                JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, Constant.SERVER_IP + "json-test", params,
-//                        new Response.Listener<JSONObject>() {
-//                            @Override
-//                            public void onResponse(JSONObject response) {
-//                                Messages.makeToast(context, "Response is: " + response.toString());
-//                            }
-//                        },
-//                        new Response.ErrorListener() {
-//                            @Override
-//                            public void onErrorResponse(VolleyError error) {
-//                                Messages.makeToast(context, "Request failed, no response received!");
-//                            }
-//                        }
-//                ) {
-//                    @Override
-//                    public String getBodyContentType() {
-//                        return "application/json; charset=utf-8";
-//                    }
-//
-//                    @Override
-//                    public byte[] getBody() {
-//                        try {
-//                            return requestBody == null ? null : requestBody.getBytes("utf-8");
-//                        } catch (UnsupportedEncodingException e) {
-//                            e.printStackTrace();
-//                        }
-//                        return null;
-//                    }
-//                };
-//                queue.add(jsonRequest);
             }
         });
 
